@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sourceline · CS491/492 Senior Design Project</title>
+<meta name="description" content="Sourceline recovers a Software Bill of Materials from stripped firmware binaries and maps it to known CVEs. Bilkent University CS491/492 senior design project.">
+<style>
+:root{
+  --bg:#f7f7f5; --surface:#ffffff; --text:#1b1d1f; --muted:#5d636a; --line:#e2e3e0;
+  --accent:#0f766e; --accent-soft:#e3f2f0; --code:#eef0ee;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0f1214; --surface:#161a1d; --text:#e6e8ea; --muted:#9aa2a9; --line:#262c31;
+    --accent:#4fd1c0; --accent-soft:#12302d; --code:#1c2125;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+header.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:16px}
+.brand{font-family:var(--mono);font-weight:700;letter-spacing:.02em;color:var(--text)}
+.brand span{color:var(--accent)}
+nav a{color:var(--muted);margin-left:20px;font-size:14px}
+nav a:hover{color:var(--text);text-decoration:none}
+@media (max-width:640px){nav a{margin-left:12px;font-size:13px} nav a.hide-sm{display:none}}
+
+.hero{padding:72px 20px 48px}
+.eyebrow{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin:0 0 14px}
+.hero h1{font-size:clamp(34px,6vw,56px);line-height:1.08;margin:0 0 18px;letter-spacing:-.02em}
+.hero p.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:720px;margin:0 0 28px}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;padding:10px 18px;border-radius:8px;font-weight:600;font-size:15px;border:1px solid var(--line);color:var(--text);background:var(--surface)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn:hover{text-decoration:none;filter:brightness(1.05)}
+
+section{padding:48px 0;border-top:1px solid var(--line)}
+section h2{font-size:26px;margin:0 0 8px;letter-spacing:-.01em}
+section .sub{color:var(--muted);margin:0 0 28px;max-width:720px}
+
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:8px 0 8px}
+.step{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 14px;margin-right:22px}
+.step:last-child{margin-right:0}
+.step:not(:last-child)::after{content:"";position:absolute;right:-17px;top:50%;width:12px;height:12px;border-top:2px solid var(--accent);border-right:2px solid var(--accent);transform:translateY(-50%) rotate(45deg)}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.step h3{font-size:15px;margin:4px 0 6px}
+.step p{font-size:13.5px;color:var(--muted);margin:0;line-height:1.5}
+@media (max-width:820px){
+  .pipeline{grid-template-columns:1fr}
+  .step{margin:0 0 22px}
+  .step:last-child{margin-bottom:0}
+  .step:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-17px;transform:translateX(-50%) rotate(135deg)}
+}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px}
+.card h3{margin:0 0 6px;font-size:16px}
+.card p{margin:0;color:var(--muted);font-size:14.5px}
+
+.scope{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:20px}
+.scope div{background:var(--code);border-radius:8px;padding:12px 14px;font-size:14px}
+.scope b{display:block;font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:500;margin-bottom:2px;text-transform:uppercase;letter-spacing:.05em}
+
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.member{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 16px;text-align:center}
+.avatar{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-weight:700;font-family:var(--mono)}
+.member .name{font-weight:600}
+.member .role{font-size:13px;color:var(--muted)}
+.advisor{margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 24px;color:var(--muted);font-size:15px}
+.advisor b{color:var(--text)}
+
+table.docs{width:100%;border-collapse:collapse;font-size:15px}
+table.docs th,table.docs td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line)}
+table.docs th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.status{font-family:var(--mono);font-size:12px;padding:2px 8px;border-radius:99px;background:var(--code);color:var(--muted);white-space:nowrap}
+.empty{color:var(--muted);font-style:italic}
+
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">source<span>line</span></a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#how" class="hide-sm">How it works</a>
+      <a href="#team">Team</a>
+      <a href="#reports">Reports</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <p class="eyebrow">Bilkent University · CS491/492 Senior Design Project</p>
+    <h1>What is really inside your firmware?</h1>
+    <p class="lead">Sourceline identifies the open-source libraries and their exact versions inside stripped firmware binaries, recovers a Software Bill of Materials, and maps it to known vulnerabilities.</p>
+    <div class="cta">
+      <a class="btn primary" href="#about">Learn more</a>
+      <a class="btn" href="https://github.com/sourceline-cs491">GitHub</a>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="wrap">
+      <h2>About the project</h2>
+      <p class="sub">Embedded devices such as routers and IoT products ship firmware built from dozens of open-source libraries, but vendors rarely say which components and versions are inside. When a new vulnerability is published, device owners and security teams have no reliable way to know whether they are affected.</p>
+      <div class="cards">
+        <div class="card">
+          <h3>The problem</h3>
+          <p>Firmware binaries are stripped and cross-compiled, so their library names and version strings are missing or unreliable. Without that information, nobody can say which CVEs apply to a device.</p>
+        </div>
+        <div class="card">
+          <h3>Our approach</h3>
+          <p>We match function-level fingerprints from the firmware against a reference corpus of open-source libraries. We build the corpus by cross-compiling many versions with different compilers, optimization levels and architectures.</p>
+        </div>
+        <div class="card">
+          <h3>What sets it apart</h3>
+          <p>Commercial tools in this space publish no accuracy figures. Sourceline will be evaluated on an open, reproducible benchmark, so anyone can measure and check its results.</p>
+        </div>
+      </div>
+      <div class="scope">
+        <div><b>Target</b>Linux-based firmware</div>
+        <div><b>Architectures</b>MIPS32, ARM32</div>
+        <div><b>Binary format</b>ELF (stripped)</div>
+        <div><b>Source languages</b>C / C++</div>
+        <div><b>Analysis</b>Static only</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <p class="sub">From a firmware image to a vulnerability report in five stages.</p>
+      <div class="pipeline">
+        <div class="step"><div class="n">01</div><h3>Extract</h3><p>Unpack the firmware image and collect its ELF executables and libraries.</p></div>
+        <div class="step"><div class="n">02</div><h3>Analyze</h3><p>Disassemble each binary and recover function boundaries without symbols.</p></div>
+        <div class="step"><div class="n">03</div><h3>Fingerprint</h3><p>Turn each function into a normalized fingerprint that holds up across architectures, compilers and optimization levels.</p></div>
+        <div class="step"><div class="n">04</div><h3>Match</h3><p>Search the reference corpus to identify each library and its version.</p></div>
+        <div class="step"><div class="n">05</div><h3>Report</h3><p>Build the SBOM, map components to CVEs, and present the results in the web app.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="wrap">
+      <h2>Team</h2>
+      <p class="sub">Five students in Computer Engineering at Bilkent University.</p>
+      <div class="team">
+        <div class="member"><div class="avatar">AK</div><div class="name">Alperen Kalyoncu</div></div>
+        <div class="member"><div class="avatar">ASA</div><div class="name">Arda Selim Arslan</div></div>
+        <div class="member"><div class="avatar">DCY</div><div class="name">Deniz Can Yoldaş</div></div>
+        <div class="member"><div class="avatar">EA</div><div class="name">Emre Altuner</div></div>
+        <div class="member"><div class="avatar">RA</div><div class="name">Rıfat Arifoğlu</div></div>
+      </div>
+      <div class="advisor">
+        <span>Supervisor: <b>Abdullah Talayhan</b></span>
+        <span>Innovation Expert: <b>Abdullah Talayhan</b></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="reports">
+    <div class="wrap">
+      <h2>Reports &amp; deliverables</h2>
+      <p class="sub">Course reports and project documents will be published here as they are completed.</p>
+      <table class="docs">
+        <thead><tr><th>Document</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="empty" colspan="3">No documents published yet.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Sourceline · Bilkent University, Department of Computer Engineering</span>
+    <a href="https://github.com/sourceline-cs491">github.com/sourceline-cs491</a>
+  </div>
+</footer>
+
+</body>
+</html>
